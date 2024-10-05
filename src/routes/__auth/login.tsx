@@ -1,12 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LogInForm } from "../../features/auth/components/LogInForm";
 
 const Login = () => {
-  return (
-    <div>
-      <p>Hello /__auth/login!</p>
-      <Link to="/signup">Go to signup</Link>
-    </div>
-  );
+  return <LogInForm />;
 };
 export const Route = createFileRoute("/__auth/login")({
   component: Login

@@ -5,7 +5,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  FormHelperText,
   Button,
   Container,
   HStack,
@@ -22,9 +21,8 @@ import { TextLink } from "./TextLink";
 const socialLoginEnabled =
   import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED === "true";
 
-export const SignUpForm = () => {
+export const LogInForm = () => {
   const [showPassword, setShowPassword] = useBoolean(false);
-
   return (
     <Container
       maxW={["100%", "100%", "2xl"]}
@@ -33,15 +31,10 @@ export const SignUpForm = () => {
       p="10"
       rounded="md"
     >
-      {" "}
-      <Heading as="h2">Create your account.</Heading>
-      <Text fontSize="xl" mt="2">
-        Join to see stats, team standing, events, and more!
-      </Text>
+      <Heading as="h2">Sign in to your account.</Heading>
       <FormControl mt="4">
         <FormLabel>Email address</FormLabel>
         <Input type="email" size="lg" borderColor="gray.400" />
-        <FormHelperText>We&apos;ll never share your email.</FormHelperText>
       </FormControl>
       <FormControl mt="4">
         <FormLabel>Password</FormLabel>
@@ -64,15 +57,10 @@ export const SignUpForm = () => {
             icon={showPassword ? <FaEyeSlash size="24" /> : <FaEye size="24" />}
           />
         </Box>
-        <FormHelperText>
-          Your password should be at least 8 letters and a mix of lowercase,
-          uppercase letters, digits and symbols.
-        </FormHelperText>
       </FormControl>
       <Box mt="8">
-        {" "}
         <Button width="100%" size="lg" colorScheme="gray">
-          Create account
+          Sign in
         </Button>
       </Box>
       {socialLoginEnabled && (
@@ -91,7 +79,7 @@ export const SignUpForm = () => {
               minW={["100%", "50%"]}
             >
               <Icon as={FaGoogle} marginRight={2} />
-              <Text fontWeight={400}>Sign up with Google</Text>
+              <Text fontWeight={400}>Sign in with Google</Text>
             </Button>
             <Button
               size="lg"
@@ -100,14 +88,15 @@ export const SignUpForm = () => {
               minW={["100%", "50%"]}
             >
               <Icon as={FaFacebook} marginRight={2} />
-              <Text fontWeight={400}>Sign up with Facebook</Text>
+              <Text fontWeight={400}>Sign in with Facebook</Text>
             </Button>
           </HStack>
         </>
       )}
+
       <Box mt="8" textAlign="center">
-        <Text>Already have an account?</Text>
-        <TextLink to="/login">Log in here.</TextLink>
+        <Text>Don&apos;t have an account?</Text>
+        <TextLink to="/signup">Sign up here.</TextLink>
       </Box>
     </Container>
   );
