@@ -31,7 +31,7 @@ export const LogInForm = () => {
       p="10"
       rounded="md"
     >
-      <Heading as="h2">Sign in to your account.</Heading>
+      <Heading as="h2">Log in to your account.</Heading>
       <FormControl mt="4">
         <FormLabel>Email address</FormLabel>
         <Input type="email" size="lg" borderColor="gray.400" />
@@ -60,7 +60,7 @@ export const LogInForm = () => {
       </FormControl>
       <Box mt="8">
         <Button width="100%" size="lg" colorScheme="gray">
-          Sign in
+          Log in to account
         </Button>
       </Box>
       {socialLoginEnabled && (
@@ -79,7 +79,7 @@ export const LogInForm = () => {
               minW={["100%", "50%"]}
             >
               <Icon as={FaGoogle} marginRight={2} />
-              <Text fontWeight={400}>Sign in with Google</Text>
+              <Text fontWeight={400}>Log in with Google</Text>
             </Button>
             <Button
               size="lg"
@@ -88,7 +88,7 @@ export const LogInForm = () => {
               minW={["100%", "50%"]}
             >
               <Icon as={FaFacebook} marginRight={2} />
-              <Text fontWeight={400}>Sign in with Facebook</Text>
+              <Text fontWeight={400}>Log in with Facebook</Text>
             </Button>
           </HStack>
         </>
