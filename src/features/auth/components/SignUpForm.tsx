@@ -17,7 +17,8 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 
 import { TextLink } from "./TextLink";
 
-const socialLoginEnabled = import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED;
+const socialLoginEnabled =
+  import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED === "true";
 
 export const SignUpForm = () => {
   return (
