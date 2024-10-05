@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { SignUpForm } from "../../features/auth/components/SignUpForm";
 
 const SignUp = () => {
   return (
     <div>
-      <p>Hello /__auth/signup!</p>
-      <Link to="/login">Go to login</Link>
+      <SignUpForm />
     </div>
   );
 };

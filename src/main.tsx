@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import { customTheme } from "./theme";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -22,7 +23,7 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <ChakraProvider>
+      <ChakraProvider theme={customTheme}>
         <RouterProvider router={router} />
       </ChakraProvider>
     </StrictMode>
