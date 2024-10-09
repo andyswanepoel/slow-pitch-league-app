@@ -6,8 +6,6 @@ import { Link, LinkProps } from "@chakra-ui/react";
 export const TextLink = createLink(
   React.forwardRef(
     (props: LinkProps, ref: React.ForwardedRef<HTMLAnchorElement>) => {
-      console.log("@@@props: ", props);
-      console.log("@@@ref: ", ref);
       return (
         <Link
           textDecoration="underline"
