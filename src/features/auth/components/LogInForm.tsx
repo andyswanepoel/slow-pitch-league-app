@@ -62,7 +62,8 @@ const SERVER_ERROR_MESSAGES: IServerErrorMessages[] = [
       <Text color="red.500">
         Incorrect email and password combination. You can{" "}
         <TextLink to="/signup">sign up</TextLink> or{" "}
-        <TextLink>reset your password</TextLink>, if needed.
+        <TextLink to="/reset-password">reset your password</TextLink>, if
+        needed.
       </Text>
     )
   }
@@ -89,11 +90,10 @@ const ErrorMessage: React.FC<IErrorMessagesProps> = ({
     </Box>
   );
 };
-export const LogInForm = () => {
+export const LogInForm: React.FC = () => {
   const [showPassword, setShowPassword] = useBoolean(false);
   const [serverError, setServerError] = React.useState("");
 
-  console.log("@@@serverError: ", serverError);
   // Probably want to use a form library here to deal with edge cases, etc.
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");

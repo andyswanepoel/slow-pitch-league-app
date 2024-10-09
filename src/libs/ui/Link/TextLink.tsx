@@ -1,18 +1,13 @@
 /* eslint-disable react/display-name */
 import * as React from "react";
-import {
-  Link as RouterLink,
-  createLink,
-  type LinkProps as RouterLinkProps
-} from "@tanstack/react-router";
+import { Link as RouterLink, createLink } from "@tanstack/react-router";
 import { Link, LinkProps } from "@chakra-ui/react";
 
 export const TextLink = createLink(
   React.forwardRef(
-    (
-      props: RouterLinkProps & LinkProps,
-      ref: React.ForwardedRef<HTMLAnchorElement>
-    ) => {
+    (props: LinkProps, ref: React.ForwardedRef<HTMLAnchorElement>) => {
+      console.log("@@@props: ", props);
+      console.log("@@@ref: ", ref);
       return (
         <Link
           textDecoration="underline"

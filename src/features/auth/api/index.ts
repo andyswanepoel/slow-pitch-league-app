@@ -38,6 +38,10 @@ export const logInUserWithPassword = async (
   });
 };
 
+export const resetPassword = async (email: string) => {
+  return await supabase.auth.resetPasswordForEmail(email);
+};
+
 export const logout = async () => {
   return await supabase.auth.signOut();
 };
