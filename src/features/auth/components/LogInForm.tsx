@@ -18,22 +18,94 @@ import {
 } from "@chakra-ui/react";
 import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 
-import { TextLink } from "./TextLink";
-import { logInUserWithPassword } from "../api";
+import { TextLink } from "@libs/ui";
+import { logInUserWithPassword, resendConfirmationEmail } from "../api";
 
 const socialLoginEnabled =
   import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED === "true";
 
+interface ILoginFormValues {
+  email: string;
+  password: string;
+}
+interface IErrorMessagesProps extends ILoginFormValues {
+  serverError: string;
+}
+
+interface IServerErrorMessages {
+  code: string;
+  message: (formValues: ILoginFormValues) => JSX.Element;
+}
+
+// @TODO: refactor into separate components
+const SERVER_ERROR_MESSAGES: IServerErrorMessages[] = [
+  {
+    code: "email_not_confirmed",
+    message: formValues => (
+      <>
+        <Text color="red.500">You haven&apos;t confirmed your email. </Text>
+        <Button
+          marginTop="2"
+          size="md"
+          variant="outline"
+          colorScheme="gray"
+          onClick={() => void resendConfirmationEmail(formValues.email)}
+        >
+          Send the confirmation email again
+        </Button>
+      </>
+    )
+  },
+  {
+    code: "invalid_credentials",
+    message: () => (
+      <Text color="red.500">
+        Incorrect email and password combination. You can{" "}
+        <TextLink to="/signup">sign up</TextLink> or{" "}
+        <TextLink>reset your password</TextLink>, if needed.
+      </Text>
+    )
+  }
+];
+
+const ErrorMessage: React.FC<IErrorMessagesProps> = ({
+  serverError,
+  email,
+  password
+}) => {
+  if (!serverError) {
+    return null;
+  }
+
+  const error = SERVER_ERROR_MESSAGES.find(error => error.code === serverError);
+
+  return (
+    <Box marginTop="4" padding="4" borderRadius="md" textAlign="center">
+      {error ? (
+        error.message({ email, password })
+      ) : (
+        <Text color="red.500">Something went wrong!</Text>
+      )}
+    </Box>
+  );
+};
 export const LogInForm = () => {
   const [showPassword, setShowPassword] = useBoolean(false);
+  const [serverError, setServerError] = React.useState("");
 
+  console.log("@@@serverError: ", serverError);
   // Probably want to use a form library here to deal with edge cases, etc.
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleLogIn = async () => {
     // Probably want to do something with these returned values, put them in an error arrays, etc.
-    await logInUserWithPassword(email, password);
+    const { error } = await logInUserWithPassword(email, password);
+
+    if (error) {
+      console.log(error.code);
+      setServerError(error.code ?? "unknown_error");
+    }
   };
 
   return (
@@ -119,6 +191,13 @@ export const LogInForm = () => {
           </HStack>
         </>
       )}
+      <Box id="form-errors" role="alert" aria-atomic="true">
+        <ErrorMessage
+          serverError={serverError}
+          email={email}
+          password={password}
+        />
+      </Box>
 
       <Box mt="8" textAlign="center">
         <Text>Don&apos;t have an account?</Text>

@@ -13,7 +13,17 @@ export const TextLink = createLink(
       props: RouterLinkProps & LinkProps,
       ref: React.ForwardedRef<HTMLAnchorElement>
     ) => {
-      return <Link as={RouterLink} {...props} ref={ref} preload="intent" />;
+      return (
+        <Link
+          textDecoration="underline"
+          _hover={{ textDecoration: "none" }}
+          _focus={{ textDecoration: "none" }}
+          as={RouterLink}
+          {...props}
+          ref={ref}
+          preload="intent"
+        />
+      );
     }
   )
 );

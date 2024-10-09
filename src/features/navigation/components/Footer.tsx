@@ -6,9 +6,9 @@ import {
   IconButton,
   Flex
 } from "@chakra-ui/react";
+import { TextLink } from "@libs/ui";
 import { FaTwitter, FaInstagram } from "react-icons/fa";
-import { LINKS } from "../navLinks";
-import { TextLink } from "../../auth/components/TextLink";
+import { PUBLIC_LINKS as LINKS } from "../navLinks";
 
 export const Footer = () => {
   return (

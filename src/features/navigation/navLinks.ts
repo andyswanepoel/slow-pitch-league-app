@@ -1,1 +1,2 @@
-export const LINKS = ["Link 1", "Link 2", "Link 3", "Link 4"];
+export const AUTHENTICATED_LINKS = ["My Team", "Schedule", "Standings"];
+export const PUBLIC_LINKS = ["About", "Standings"];
