@@ -7,7 +7,6 @@ export const RedirectAuthenticatedUserHome: React.FC<
 > = ({ children }) => {
   const { authenticated } = useAuth();
 
-  console.log("@@@running");
   if (authenticated) {
     return <Navigate to="/" />;
   }
