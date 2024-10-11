@@ -17,7 +17,6 @@ import {
   IconButton
 } from "@chakra-ui/react";
 import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
-import type { AuthError } from "@supabase/supabase-js";
 
 import { TextLink } from "@libs/ui";
 import { signUpUser } from "../api";
