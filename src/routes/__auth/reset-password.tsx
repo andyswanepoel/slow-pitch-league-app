@@ -1,6 +1,6 @@
-import { ResetPasswordForm } from '@features/auth'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { ResetPasswordForm } from "@features/auth";
 
-export const Route = createFileRoute('/__auth/reset-password')({
-  component: ResetPasswordForm,
-})
+export const Route = createFileRoute("/__auth/reset-password")({
+  component: ResetPasswordForm
+});

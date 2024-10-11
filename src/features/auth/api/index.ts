@@ -13,7 +13,9 @@ export const signUpUser = async (
       data: {
         first_name: firstName,
         last_name: lastName
-      }
+      },
+
+      emailRedirectTo: `${import.meta.env.VITE_SUPABASE_URL}/welcome`
     }
   });
 };
@@ -39,7 +41,9 @@ export const logInUserWithPassword = async (
 };
 
 export const resetPassword = async (email: string) => {
-  return await supabase.auth.resetPasswordForEmail(email);
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${import.meta.env.VITE_SUPABASE_URL}/update-password`
+  });
 };
 
 export const logout = async () => {

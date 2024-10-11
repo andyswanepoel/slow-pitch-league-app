@@ -1,4 +1,5 @@
 import * as React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
   Box,
@@ -19,7 +20,7 @@ import {
 import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { TextLink } from "@libs/ui";
-import { logInUserWithPassword, resendConfirmationEmail } from "../api";
+import { logInUserWithPassword } from "../api";
 
 const socialLoginEnabled =
   import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED === "true";
@@ -28,83 +29,26 @@ interface ILoginFormValues {
   email: string;
   password: string;
 }
-interface IErrorMessagesProps extends ILoginFormValues {
-  serverError: string;
-}
 
-interface IServerErrorMessages {
-  code: string;
-  message: (formValues: ILoginFormValues) => JSX.Element;
-}
-
-// @TODO: refactor into separate components
-const SERVER_ERROR_MESSAGES: IServerErrorMessages[] = [
-  {
-    code: "email_not_confirmed",
-    message: formValues => (
-      <>
-        <Text color="red.500">You haven&apos;t confirmed your email. </Text>
-        <Button
-          marginTop="2"
-          size="md"
-          variant="outline"
-          colorScheme="gray"
-          onClick={() => void resendConfirmationEmail(formValues.email)}
-        >
-          Send the confirmation email again
-        </Button>
-      </>
-    )
-  },
-  {
-    code: "invalid_credentials",
-    message: () => (
-      <Text color="red.500">
-        Incorrect email and password combination. You can{" "}
-        <TextLink to="/signup">sign up</TextLink> or{" "}
-        <TextLink to="/reset-password">reset your password</TextLink>, if
-        needed.
-      </Text>
-    )
-  }
-];
-
-const ErrorMessage: React.FC<IErrorMessagesProps> = ({
-  serverError,
-  email,
-  password
-}) => {
-  if (!serverError) {
-    return null;
-  }
-
-  const error = SERVER_ERROR_MESSAGES.find(error => error.code === serverError);
-
-  return (
-    <Box marginTop="4" padding="4" borderRadius="md" textAlign="center">
-      {error ? (
-        error.message({ email, password })
-      ) : (
-        <Text color="red.500">Something went wrong!</Text>
-      )}
-    </Box>
-  );
-};
 export const LogInForm: React.FC = () => {
   const [showPassword, setShowPassword] = useBoolean(false);
-  const [serverError, setServerError] = React.useState("");
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting }
+  } = useForm<ILoginFormValues>();
 
-  // Probably want to use a form library here to deal with edge cases, etc.
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-
-  const handleLogIn = async () => {
-    // Probably want to do something with these returned values, put them in an error arrays, etc.
+  const onSubmit: SubmitHandler<ILoginFormValues> = async ({
+    email,
+    password
+  }) => {
     const { error } = await logInUserWithPassword(email, password);
 
     if (error) {
-      console.log(error.code);
-      setServerError(error.code ?? "unknown_error");
+      setError("root.serverError", {
+        type: error.code ?? "unknown_error"
+      });
     }
   };
 
@@ -115,6 +59,10 @@ export const LogInForm: React.FC = () => {
       backgroundColor="white"
       p="10"
       rounded="md"
+      as="form"
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
     >
       <Heading as="h2">Log in to your account.</Heading>
       <FormControl mt="4">
@@ -122,10 +70,21 @@ export const LogInForm: React.FC = () => {
         <Input
           type="email"
           size="lg"
-          borderColor="gray.400"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          borderColor={errors.email ? "red.500" : "gray.400"}
+          {...register("email", {
+            required: "Email is required.",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Please enter a valid email address."
+            }
+          })}
+          aria-invalid={errors.email ? "true" : "false"}
         />
+        {errors.email && (
+          <Text color="red.500" role="alert">
+            {errors.email.message}
+          </Text>
+        )}
       </FormControl>
       <FormControl mt="4">
         <FormLabel>Password</FormLabel>
@@ -133,10 +92,10 @@ export const LogInForm: React.FC = () => {
           <Input
             type={showPassword ? "text" : "password"}
             size="lg"
-            borderColor="gray.400"
+            borderColor={errors.password ? "red.500" : "gray.400"}
             paddingRight="12"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
+            {...register("password", { required: "Password is required." })}
+            aria-invalid={errors.password ? "true" : "false"}
           />
           <IconButton
             onClick={setShowPassword.toggle}
@@ -150,13 +109,19 @@ export const LogInForm: React.FC = () => {
             icon={showPassword ? <FaEyeSlash size="24" /> : <FaEye size="24" />}
           />
         </Box>
+        {errors.password && (
+          <Text color="red.500" role="alert">
+            {errors.password.message}
+          </Text>
+        )}
       </FormControl>
       <Box mt="8">
         <Button
+          isLoading={isSubmitting}
           width="100%"
           size="lg"
           colorScheme="blue"
-          onClick={() => void handleLogIn()}
+          type="submit"
         >
           Log in to account
         </Button>
@@ -191,13 +156,41 @@ export const LogInForm: React.FC = () => {
           </HStack>
         </>
       )}
-      <Box id="form-errors" role="alert" aria-atomic="true">
-        <ErrorMessage
-          serverError={serverError}
-          email={email}
-          password={password}
-        />
-      </Box>
+      {errors.root?.serverError && (
+        <Box
+          id="form-errors"
+          role="alert"
+          aria-atomic="true"
+          marginTop="4"
+          borderRadius="md"
+        >
+          {errors.root?.serverError.type === "unknown_error" && (
+            <Text color="red.500">Something went wrong!</Text>
+          )}
+          {errors.root?.serverError.type === "invalid_credentials" && (
+            <>
+              <Text color="red.500">
+                Incorrect email and password combination.
+              </Text>
+              <Text color="red.500">
+                <TextLink to="/reset-password">Reset your password.</TextLink>
+              </Text>
+            </>
+          )}
+          {errors.root?.serverError.type === "email_not_confirmed" && (
+            <>
+              <Text color="red.500">
+                You haven&apos;t confirmed your email.
+              </Text>
+              <Text color="red.500">
+                <TextLink to="/confirm-email">
+                  Resend confirmation email.
+                </TextLink>
+              </Text>
+            </>
+          )}
+        </Box>
+      )}
 
       <Box mt="8" textAlign="center">
         <Text>Don&apos;t have an account?</Text>

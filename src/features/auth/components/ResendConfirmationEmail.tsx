@@ -12,25 +12,25 @@ import {
 } from "@chakra-ui/react";
 
 import { TextLink } from "@libs/ui";
-import { resetPassword } from "../api";
+import { resendConfirmationEmail } from "../api";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface IResetPasswordFormValues {
+interface IResendConfirmationEmailFormValues {
   email: string;
 }
 
-export const ResetPasswordForm: React.FC = () => {
+export const ResendConfirmationEmail: React.FC = () => {
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<IResetPasswordFormValues>();
+  } = useForm<IResendConfirmationEmailFormValues>();
 
-  const onSubmit: SubmitHandler<IResetPasswordFormValues> = async ({
+  const onSubmit: SubmitHandler<IResendConfirmationEmailFormValues> = async ({
     email
   }) => {
-    const { error } = await resetPassword(email);
+    const { error } = await resendConfirmationEmail(email);
 
     if (error) {
       setError("root.serverError", {
@@ -51,7 +51,7 @@ export const ResetPasswordForm: React.FC = () => {
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
-      <Heading as="h2">Reset your password.</Heading>
+      <Heading as="h2">Resend your confirmation email.</Heading>
       <FormControl mt="4">
         <FormLabel>Email address</FormLabel>
         <Input
@@ -81,7 +81,7 @@ export const ResetPasswordForm: React.FC = () => {
           colorScheme="blue"
           type="submit"
         >
-          Reset password
+          Resend email
         </Button>
       </Box>
       {errors.root?.serverError && (

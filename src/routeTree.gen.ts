@@ -16,6 +16,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as authSignupImport } from './routes/__auth/signup'
 import { Route as authResetPasswordImport } from './routes/__auth/reset-password'
 import { Route as authLoginImport } from './routes/__auth/login'
+import { Route as authConfirmEmailImport } from './routes/__auth/confirm-email'
 
 // Create/Update Routes
 
@@ -44,6 +45,11 @@ const authLoginRoute = authLoginImport.update({
   getParentRoute: () => authRoute,
 } as any)
 
+const authConfirmEmailRoute = authConfirmEmailImport.update({
+  path: '/confirm-email',
+  getParentRoute: () => authRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -61,6 +67,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof authImport
       parentRoute: typeof rootRoute
+    }
+    '/__auth/confirm-email': {
+      id: '/__auth/confirm-email'
+      path: '/confirm-email'
+      fullPath: '/confirm-email'
+      preLoaderRoute: typeof authConfirmEmailImport
+      parentRoute: typeof authImport
     }
     '/__auth/login': {
       id: '/__auth/login'
@@ -89,12 +102,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface authRouteChildren {
+  authConfirmEmailRoute: typeof authConfirmEmailRoute
   authLoginRoute: typeof authLoginRoute
   authResetPasswordRoute: typeof authResetPasswordRoute
   authSignupRoute: typeof authSignupRoute
 }
 
 const authRouteChildren: authRouteChildren = {
+  authConfirmEmailRoute: authConfirmEmailRoute,
   authLoginRoute: authLoginRoute,
   authResetPasswordRoute: authResetPasswordRoute,
   authSignupRoute: authSignupRoute,
@@ -105,6 +120,7 @@ const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof authRouteWithChildren
+  '/confirm-email': typeof authConfirmEmailRoute
   '/login': typeof authLoginRoute
   '/reset-password': typeof authResetPasswordRoute
   '/signup': typeof authSignupRoute
@@ -113,6 +129,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof authRouteWithChildren
+  '/confirm-email': typeof authConfirmEmailRoute
   '/login': typeof authLoginRoute
   '/reset-password': typeof authResetPasswordRoute
   '/signup': typeof authSignupRoute
@@ -122,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/__auth': typeof authRouteWithChildren
+  '/__auth/confirm-email': typeof authConfirmEmailRoute
   '/__auth/login': typeof authLoginRoute
   '/__auth/reset-password': typeof authResetPasswordRoute
   '/__auth/signup': typeof authSignupRoute
@@ -129,13 +147,20 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/reset-password' | '/signup'
+  fullPaths:
+    | '/'
+    | ''
+    | '/confirm-email'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/login' | '/reset-password' | '/signup'
+  to: '/' | '' | '/confirm-email' | '/login' | '/reset-password' | '/signup'
   id:
     | '__root__'
     | '/'
     | '/__auth'
+    | '/__auth/confirm-email'
     | '/__auth/login'
     | '/__auth/reset-password'
     | '/__auth/signup'
@@ -174,10 +199,15 @@ export const routeTree = rootRoute
     "/__auth": {
       "filePath": "__auth.tsx",
       "children": [
+        "/__auth/confirm-email",
         "/__auth/login",
         "/__auth/reset-password",
         "/__auth/signup"
       ]
+    },
+    "/__auth/confirm-email": {
+      "filePath": "__auth/confirm-email.tsx",
+      "parent": "/__auth"
     },
     "/__auth/login": {
       "filePath": "__auth/login.tsx",
