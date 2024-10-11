@@ -14,6 +14,7 @@ import {
 import { TextLink } from "@libs/ui";
 import { resetPassword } from "../api";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { EMAIL_REGEX } from "../constants";
 
 interface IResetPasswordFormValues {
   email: string;
@@ -34,7 +35,7 @@ export const ResetPasswordForm: React.FC = () => {
 
     if (error) {
       setError("root.serverError", {
-        type: "unknown_error"
+        type: "server_error"
       });
     }
   };
@@ -61,7 +62,7 @@ export const ResetPasswordForm: React.FC = () => {
           {...register("email", {
             required: "Email is required.",
             pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              value: EMAIL_REGEX,
               message: "Please enter a valid email address."
             }
           })}

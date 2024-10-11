@@ -21,6 +21,7 @@ import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { TextLink } from "@libs/ui";
 import { logInUserWithPassword } from "../api";
+import { EMAIL_REGEX } from "../constants";
 
 const socialLoginEnabled =
   import.meta.env.VITE_SUPABASE_SOCIAL_LOGIN_ENABLED === "true";
@@ -47,7 +48,7 @@ export const LogInForm: React.FC = () => {
 
     if (error) {
       setError("root.serverError", {
-        type: error.code ?? "unknown_error"
+        type: error.code ?? "server_error"
       });
     }
   };
@@ -74,7 +75,7 @@ export const LogInForm: React.FC = () => {
           {...register("email", {
             required: "Email is required.",
             pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              value: EMAIL_REGEX,
               message: "Please enter a valid email address."
             }
           })}
@@ -164,7 +165,7 @@ export const LogInForm: React.FC = () => {
           marginTop="4"
           borderRadius="md"
         >
-          {errors.root?.serverError.type === "unknown_error" && (
+          {errors.root?.serverError.type === "server_error" && (
             <Text color="red.500">Something went wrong!</Text>
           )}
           {errors.root?.serverError.type === "invalid_credentials" && (
