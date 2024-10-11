@@ -1,4 +1,5 @@
 import supabase from "@libs/supabase";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const signUpUser = async (
   email: string,
@@ -15,7 +16,7 @@ export const signUpUser = async (
         last_name: lastName
       },
 
-      emailRedirectTo: `${import.meta.env.VITE_SUPABASE_URL}/welcome`
+      emailRedirectTo: `${baseUrl}/welcome`
     }
   });
 };
@@ -25,7 +26,7 @@ export const resendConfirmationEmail = async (email: string) => {
     type: "signup",
     email,
     options: {
-      emailRedirectTo: `${import.meta.env.VITE_SUPABASE_URL}/welcome`
+      emailRedirectTo: `${baseUrl}/welcome`
     }
   });
 };
@@ -42,7 +43,7 @@ export const logInUserWithPassword = async (
 
 export const resetPassword = async (email: string) => {
   return await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${import.meta.env.VITE_SUPABASE_URL}/update-password`
+    redirectTo: `${baseUrl}/update-password`
   });
 };
 
