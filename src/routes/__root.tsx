@@ -1,7 +1,7 @@
 import * as React from "react";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { Header } from "../features/navigation/components/Header";
-import { Footer } from "../features/navigation/components/Footer";
+import { createRootRouteWithContext } from "@tanstack/react-router";
+import type { IRouterContext } from "@features/routing";
+import { Layout } from "../Layout";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -15,14 +15,10 @@ const TanStackRouterDevtools =
         }))
       );
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<IRouterContext>()({
   component: () => (
     <>
-      <Header />
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
+      <Layout />
       <React.Suspense>
         <TanStackRouterDevtools />
       </React.Suspense>

@@ -7,7 +7,9 @@
     "skipLibCheck": true,
     "paths": {
       "@libs/*": ["./src/libs/*"],
-      "@features/*": ["./src/features/*"]
+      "@features/*": ["./src/features/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@contexts/*": ["./src/contexts/*"]
     },
 
     /* Bundler mode */

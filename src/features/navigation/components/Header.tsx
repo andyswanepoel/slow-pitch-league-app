@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Box,
   Flex,
@@ -19,6 +20,7 @@ import { AUTHENTICATED_LINKS, PUBLIC_LINKS } from "../navLinks";
 import { TextLink, ButtonLink } from "@libs/ui";
 import { useAuth } from "@libs/auth";
 import { logout } from "@features/auth/api";
+import { useViewportHeight } from "@contexts/ViewportHeightContext";
 
 const AuthButtons = () => {
   const { authenticated } = useAuth();
@@ -42,17 +44,31 @@ const AuthButtons = () => {
   );
 };
 
-export const Header = () => {
+export const Header: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { authenticated } = useAuth();
+  const { setHeaderHeight } = useViewportHeight();
+
+  const headerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!headerRef.current) return;
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setHeaderHeight(entry.target.clientHeight);
+      }
+    });
+    resizeObserver.observe(headerRef.current);
+    return () => resizeObserver.disconnect(); // clean up
+  }, [setHeaderHeight]);
 
   const LINKS = authenticated ? AUTHENTICATED_LINKS : PUBLIC_LINKS;
 
   return (
-    <Box bg="gray.800" color="white">
+    <Box bg="gray.800" color="white" ref={headerRef}>
       <Container maxW="8xl">
         <Flex h={16} alignItems="center" justifyContent="space-between">
-          <Link href="/" fontWeight="bold" fontSize="xl">
+          <Link href="/" fontWeight="bold" fontSize="3xl">
             TRSPL
           </Link>
 

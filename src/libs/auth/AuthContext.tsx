@@ -5,11 +5,13 @@ import type { Session } from "@supabase/supabase-js";
 interface IAuthContext {
   loaded: boolean;
   authenticated: boolean;
+  userId: string;
 }
 
 export const AuthContext = React.createContext<IAuthContext>({
   loaded: false,
-  authenticated: false
+  authenticated: false,
+  userId: ""
 });
 
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({
@@ -42,7 +44,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const value = {
     loaded,
-    authenticated: !!session
+    authenticated: !!session,
+    userId: session?.user.id ?? ""
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

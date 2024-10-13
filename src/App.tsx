@@ -1,32 +1,19 @@
 import { ChakraProvider } from "@chakra-ui/react";
 
 import { customTheme } from "./theme";
-import { AuthProvider } from "./libs/auth/AuthContext";
-
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-
-// Import the generated route tree
-import { routeTree } from "./routeTree.gen";
+import { AuthProvider } from "@libs/auth";
 import { AuthLoadingScreen } from "@features/auth";
-
-// Create a new router instance
-const router = createRouter({
-  routeTree
-});
-
-// Register the router instance for type safety
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
+import { RouterProviderWithContext } from "@features/routing";
+import { ViewportHeightProvider } from "@contexts/ViewportHeightContext";
 
 export const App = () => {
   return (
-    <ChakraProvider theme={customTheme}>
+    <ChakraProvider resetCSS theme={customTheme}>
       <AuthProvider>
         <AuthLoadingScreen>
-          <RouterProvider router={router} />{" "}
+          <ViewportHeightProvider>
+            <RouterProviderWithContext />
+          </ViewportHeightProvider>
         </AuthLoadingScreen>
       </AuthProvider>
     </ChakraProvider>

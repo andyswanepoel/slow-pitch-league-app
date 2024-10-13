@@ -25,7 +25,7 @@ export const ResendConfirmationEmail: React.FC = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting, isSubmitted, isValid }
   } = useForm<IResendConfirmationEmailFormValues>();
 
   const onSubmit: SubmitHandler<IResendConfirmationEmailFormValues> = async ({
@@ -86,14 +86,16 @@ export const ResendConfirmationEmail: React.FC = () => {
         </Button>
       </Box>
       {errors.root?.serverError && (
-        <Box
-          id="form-errors"
-          role="alert"
-          aria-atomic="true"
-          marginTop="4"
-          borderRadius="md"
-        >
+        <Box id="form-errors" role="alert" aria-atomic="true" marginTop="4">
           <Text color="red.500">Something went wrong!</Text>
+        </Box>
+      )}
+
+      {isSubmitted && isValid && (
+        <Box role="alert" aria-atomic="true" marginTop="4">
+          <Text color="blue.500" role="alert">
+            Successfully sent!
+          </Text>
         </Box>
       )}
 
