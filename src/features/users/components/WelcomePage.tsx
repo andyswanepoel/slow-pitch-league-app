@@ -1,17 +1,5 @@
-import {
-  Box,
-  Heading,
-  Text,
-  Button,
-  Link,
-  Container,
-  VStack
-} from "@chakra-ui/react";
+import { Heading, Text, Container } from "@chakra-ui/react";
 import { Route } from "@routes/welcome";
-
-interface IWelcomePageProps {
-  firstName: string;
-}
 
 export const WelcomePage: React.FC = () => {
   const user = Route.useLoaderData();

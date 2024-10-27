@@ -5,7 +5,6 @@ import { useViewportHeight } from "@contexts/ViewportHeightContext";
 
 export const Layout = () => {
   const { viewportHeight } = useViewportHeight();
-  console.log("@@@viewportHeight: ", viewportHeight);
   return (
     <>
       <Header />

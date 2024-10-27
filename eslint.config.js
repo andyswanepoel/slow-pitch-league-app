@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", "src/database.types.ts"] }, // This database.types.ts file gets automatically created and I don't want to deal with the ESLint rules for it
   {
     settings: { react: { version: "detect" } },
     extends: [
