@@ -15,16 +15,18 @@ const times: Record<"morning" | "afternoon", Time[]> = {
   ]
 };
 
+interface IMatchUp {
+  home_team_id: string;
+  away_team_id: string;
+}
 interface IGameSlot {
   time: Time;
   location: string;
 }
 
-interface IGame {
+interface IGame extends IMatchUp {
   game_time: Date;
   location: string;
-  home_team_id: string;
-  away_team_id: string;
 }
 /**
  *
@@ -86,6 +88,70 @@ function createMatchUps(teams: string[]) {
 const sortGameSlotsByTime = (a: IGameSlot, b: IGameSlot) =>
   timeToSeconds(a.time) - timeToSeconds(b.time);
 
+// Helper for slot allocation with check to avoid duplicate early/late slots
+function assignMatchUpsToSlots(
+  matchUps: IMatchUp[],
+  earlySlots: IGameSlot[],
+  lateSlots: IGameSlot[],
+  week: Date
+): IGame[] {
+  const games: IGame[] = [];
+  const teamsWithEarlyGames = new Set();
+  const teamsWithLateGames = new Set();
+  let earlyTimesIdx = 0;
+  let lateTimesIdx = 0;
+  for (const matchup of matchUps) {
+    let game: IGame;
+
+    // Lets first try fill the afternoon games
+    // Check if we've filled all slots
+    const canAddToLateSlot = lateTimesIdx < lateSlots.length;
+
+    if (canAddToLateSlot) {
+      const { location, time } = lateSlots[lateTimesIdx];
+      const game_time = new Date(week);
+      game_time.setHours(...time);
+
+      if (
+        !teamsWithLateGames.has(matchup.home_team_id) &&
+        !teamsWithLateGames.has(matchup.away_team_id)
+      ) {
+        game = { ...matchup, location, game_time };
+        teamsWithLateGames.add(matchup.home_team_id);
+        teamsWithLateGames.add(matchup.away_team_id);
+        lateTimesIdx++;
+      } else {
+        const { location, time } = earlySlots[earlyTimesIdx];
+        const game_time = new Date(week);
+        game_time.setHours(...time);
+        game = {
+          ...matchup,
+          location,
+          game_time
+        };
+        teamsWithEarlyGames.add(matchup.home_team_id);
+        teamsWithEarlyGames.add(matchup.away_team_id);
+        earlyTimesIdx++;
+      }
+    } else {
+      const { location, time } = earlySlots[earlyTimesIdx];
+      const game_time = new Date(week);
+      game_time.setHours(...time);
+      game = {
+        ...matchup,
+        location,
+        game_time
+      };
+      teamsWithEarlyGames.add(matchup.home_team_id);
+      teamsWithEarlyGames.add(matchup.away_team_id);
+      earlyTimesIdx++;
+    }
+    games.push(game);
+  }
+
+  return games;
+}
+
 export function generateSchedule(teams: string[], weeks: Date[]): IGame[] {
   const tempTeams = [...teams];
   if (tempTeams.length % 2 == 1) {
@@ -107,18 +173,6 @@ export function generateSchedule(teams: string[], weeks: Date[]): IGame[] {
   ).sort(sortGameSlotsByTime);
 
   for (const week of weeks) {
-    // Check for overlapping game times
-    let earlyTimesIdx = 0;
-    let earlyTimes = morningGameSlots.slice(0, morningGameSlots.length / 2);
-    let lateTimesIdx = 0;
-    let lateTimes = morningGameSlots.slice(
-      morningGameSlots.length / 2,
-      morningGameSlots.length
-    );
-
-    const teamsWithEarlyGames = new Set();
-    const teamsWithLateGames = new Set();
-
     const randomizedTeams = shuffle(tempTeams);
     const half = Math.floor(numTeams / 2);
     const morningTeams = randomizedTeams.slice(0, half);
@@ -126,124 +180,43 @@ export function generateSchedule(teams: string[], weeks: Date[]): IGame[] {
 
     // ensure even teams in each group
     if (afternoonTeams.length % 2 !== 0) {
-      const matchUpToMove = afternoonTeams.pop();
-      if (matchUpToMove) morningTeams.push(matchUpToMove);
+      const matchUpToMove = morningTeams.pop();
+      if (matchUpToMove) afternoonTeams.push(matchUpToMove);
     }
 
     const morningMatchUps = createMatchUps(morningTeams);
     const afternoonMatchUps = createMatchUps(afternoonTeams);
 
-    for (const morningMatchUp of morningMatchUps) {
-      let game: IGame;
+    const morningEarlySlots = morningGameSlots.slice(
+      0,
+      morningGameSlots.length / 2
+    );
+    const morningLateSlots = morningGameSlots.slice(
+      morningGameSlots.length / 2,
+      morningGameSlots.length
+    );
+    const morningGames = assignMatchUpsToSlots(
+      morningMatchUps,
+      morningEarlySlots,
+      morningLateSlots,
+      week
+    );
 
-      // Lets first try fill the afternoon games
-      // Check if we've filled all slots
-      const lateSlotsAvailable = lateTimesIdx < lateTimes.length;
-
-      if (lateSlotsAvailable) {
-        const { location, time } = lateTimes[lateTimesIdx];
-        const game_time = new Date(week);
-        game_time.setHours(...time);
-
-        if (
-          !teamsWithLateGames.has(morningMatchUp.home_team_id) &&
-          !teamsWithLateGames.has(morningMatchUp.away_team_id)
-        ) {
-          game = { ...morningMatchUp, location, game_time };
-          teamsWithLateGames.add(morningMatchUp.home_team_id);
-          teamsWithLateGames.add(morningMatchUp.away_team_id);
-          lateTimesIdx++;
-        } else {
-          const { location, time } = earlyTimes[earlyTimesIdx];
-          const game_time = new Date(week);
-          game_time.setHours(...time);
-          game = {
-            ...morningMatchUp,
-            location,
-            game_time
-          };
-          teamsWithEarlyGames.add(morningMatchUp.home_team_id);
-          teamsWithEarlyGames.add(morningMatchUp.away_team_id);
-          earlyTimesIdx++;
-        }
-      } else {
-        const { location, time } = earlyTimes[earlyTimesIdx];
-        const game_time = new Date(week);
-        game_time.setHours(...time);
-        game = {
-          ...morningMatchUp,
-          location,
-          game_time
-        };
-        teamsWithEarlyGames.add(morningMatchUp.home_team_id);
-        teamsWithEarlyGames.add(morningMatchUp.away_team_id);
-        earlyTimesIdx++;
-      }
-      schedule.push(game);
-    }
-
-    // Reset to do afternoon games
-    // --- Early
-    earlyTimesIdx = 0;
-    earlyTimes = afternoonGameSlots.slice(0, afternoonGameSlots.length / 2);
-    teamsWithEarlyGames.clear();
-
-    // --- Late
-    lateTimesIdx = 0;
-    lateTimes = afternoonGameSlots.slice(
+    const afternoonEarlySlots = afternoonGameSlots.slice(
+      0,
+      afternoonGameSlots.length / 2
+    );
+    const afternoonLateSlots = afternoonGameSlots.slice(
       afternoonGameSlots.length / 2,
       afternoonGameSlots.length
     );
-    teamsWithLateGames.clear();
-
-    for (const afternoonMatchUp of afternoonMatchUps) {
-      let game: IGame;
-
-      // Lets first try fill the afternoon games
-      // Check if we've filled all slots
-      const lateSlotsAvailable = lateTimesIdx < lateTimes.length;
-
-      if (lateSlotsAvailable) {
-        const { location, time } = lateTimes[lateTimesIdx];
-        const game_time = new Date(week);
-        game_time.setHours(...time);
-
-        if (
-          !teamsWithLateGames.has(afternoonMatchUp.home_team_id) &&
-          !teamsWithLateGames.has(afternoonMatchUp.away_team_id)
-        ) {
-          game = { ...afternoonMatchUp, location, game_time };
-          teamsWithLateGames.add(afternoonMatchUp.home_team_id);
-          teamsWithLateGames.add(afternoonMatchUp.away_team_id);
-          lateTimesIdx++;
-        } else {
-          const { location, time } = earlyTimes[earlyTimesIdx];
-          const game_time = new Date(week);
-          game_time.setHours(...time);
-          game = {
-            ...afternoonMatchUp,
-            location,
-            game_time
-          };
-          teamsWithEarlyGames.add(afternoonMatchUp.home_team_id);
-          teamsWithEarlyGames.add(afternoonMatchUp.away_team_id);
-          earlyTimesIdx++;
-        }
-      } else {
-        const { location, time } = earlyTimes[earlyTimesIdx];
-        const game_time = new Date(week);
-        game_time.setHours(...time);
-        game = {
-          ...afternoonMatchUp,
-          location,
-          game_time
-        };
-        teamsWithEarlyGames.add(afternoonMatchUp.home_team_id);
-        teamsWithEarlyGames.add(afternoonMatchUp.away_team_id);
-        earlyTimesIdx++;
-      }
-      schedule.push(game);
-    }
+    const afternoonGames = assignMatchUpsToSlots(
+      afternoonMatchUps,
+      afternoonEarlySlots,
+      afternoonLateSlots,
+      week
+    );
+    schedule.push(...morningGames, ...afternoonGames);
   }
   return schedule;
 }
