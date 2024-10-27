@@ -14,5 +14,11 @@ const gameDays = Array.from({ length: weeksInSeason }, (_, i) => {
 export async function seedGames(seed: SeedClient) {
   const teamIds = seed.$store.teams.map(team => team.id);
   const games = generateSchedule(teamIds, gameDays);
-  await seed.games(games);
+  await seed.games(
+    games.map(game => ({
+      ...game,
+      home_team_runs: Math.floor(Math.random() * 10),
+      away_team_runs: Math.floor(Math.random() * 10)
+    }))
+  );
 }
