@@ -30,7 +30,7 @@ const main = async () => {
 
   await seedUserRoles(seed, adminIndex, managerIndexes);
 
-  // await seedGames(seed);
+  await seedGames(seed);
 
   await seedSeasons(seed);
 

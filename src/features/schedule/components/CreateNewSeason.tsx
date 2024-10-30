@@ -42,7 +42,7 @@ export const CreateNewSeason: React.FC = () => {
     handleSubmit,
     getValues,
     setError,
-    formState: { errors, isSubmitting }
+    formState: { isSubmitting }
   } = useForm<INewSeasonFormValues>();
 
   const watchedStartDate = watch("startDate");
