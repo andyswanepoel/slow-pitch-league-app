@@ -1,12 +1,12 @@
-import { Heading, Text, Container } from "@chakra-ui/react";
-import { Route } from "@routes/welcome";
+import { Heading, Text } from "@chakra-ui/react";
+import { PageWrapper } from "@libs/ui";
+import { useLoaderData } from "@tanstack/react-router";
 
 export const WelcomePage: React.FC = () => {
-  const user = Route.useLoaderData();
+  const user = useLoaderData({ from: "/welcome" });
   const firstName = user?.first_name;
-  console.log("@@@data: ", user);
   return (
-    <Container maxW="8xl" py="8">
+    <PageWrapper>
       <Heading size="2xl">
         {firstName ? `Welcome, ${firstName}!` : "Welcome!"}!
       </Heading>
@@ -36,6 +36,6 @@ export const WelcomePage: React.FC = () => {
           </Link>
           .
         </Text> */}
-    </Container>
+    </PageWrapper>
   );
 };

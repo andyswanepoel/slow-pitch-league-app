@@ -9,7 +9,7 @@ export const getUser = async (userId: string) => {
     .single();
 
   if (error) {
-    // handle error
+    // @TODO: handle error
   }
 
   return data;

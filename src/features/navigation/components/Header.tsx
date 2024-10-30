@@ -74,7 +74,9 @@ export const Header: React.FC = () => {
 
           <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
             {LINKS.map(link => (
-              <TextLink key={link}>{link}</TextLink>
+              <TextLink to={link.to} key={link.id}>
+                {link.displayName}
+              </TextLink>
             ))}
             <AuthButtons />
           </HStack>
@@ -106,7 +108,9 @@ export const Header: React.FC = () => {
             <DrawerBody>
               <Stack as="nav" spacing={4}>
                 {LINKS.map(link => (
-                  <TextLink key={link}>{link}</TextLink>
+                  <TextLink to={link.to} key={link.id}>
+                    {link.displayName}
+                  </TextLink>
                 ))}
                 <AuthButtons />
               </Stack>

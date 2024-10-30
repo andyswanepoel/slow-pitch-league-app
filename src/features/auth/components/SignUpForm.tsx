@@ -157,7 +157,7 @@ export const SignUpForm: React.FC = () => {
                     required: "Password is required.",
                     pattern: {
                       value: PASSWORD_REGEX,
-                      message: "Please enter a valid email address."
+                      message: "Please enter a valid password."
                     }
                   })}
                 />

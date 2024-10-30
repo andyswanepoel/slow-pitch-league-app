@@ -7,5 +7,12 @@ export const customTheme = extendTheme({
         bg: "gray.200"
       }
     }
+  },
+  components: {
+    Button: {
+      defaultProps: {
+        colorScheme: "blue"
+      }
+    }
   }
 });

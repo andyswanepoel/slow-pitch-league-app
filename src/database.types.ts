@@ -9,34 +9,232 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      users: {
+      games: {
         Row: {
-          email: string | null
-          first_name: string | null
+          away_team_id: string | null
+          away_team_runs: number | null
+          created_at: string | null
+          game_cancelled: boolean | null
+          game_time: string | null
+          home_team_id: string | null
+          home_team_runs: number | null
           id: string
-          last_name: string | null
+          location: string | null
+          score_validated_by_away_team: boolean | null
+          score_validated_by_home_team: boolean | null
+          season_id: string | null
           updated_at: string | null
         }
         Insert: {
-          email?: string | null
-          first_name?: string | null
-          id: string
-          last_name?: string | null
+          away_team_id?: string | null
+          away_team_runs?: number | null
+          created_at?: string | null
+          game_cancelled?: boolean | null
+          game_time?: string | null
+          home_team_id?: string | null
+          home_team_runs?: number | null
+          id?: string
+          location?: string | null
+          score_validated_by_away_team?: boolean | null
+          score_validated_by_home_team?: boolean | null
+          season_id?: string | null
           updated_at?: string | null
         }
         Update: {
-          email?: string | null
-          first_name?: string | null
+          away_team_id?: string | null
+          away_team_runs?: number | null
+          created_at?: string | null
+          game_cancelled?: boolean | null
+          game_time?: string | null
+          home_team_id?: string | null
+          home_team_runs?: number | null
           id?: string
-          last_name?: string | null
+          location?: string | null
+          score_validated_by_away_team?: boolean | null
+          score_validated_by_home_team?: boolean | null
+          season_id?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
+            foreignKeyName: "fk_away_team"
+            columns: ["away_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_home_team"
+            columns: ["home_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_team"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      seasons: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          start_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      teams: {
+        Row: {
+          archived: boolean | null
+          created_at: string | null
+          id: string
+          manager_id: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          archived?: boolean | null
+          created_at?: string | null
+          id?: string
+          manager_id?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          archived?: boolean | null
+          created_at?: string | null
+          id?: string
+          manager_id?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_manager"
+            columns: ["manager_id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_role: {
+        Row: {
+          created_at: string | null
+          id: string
+          role_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_role"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string | null
+          gender: Database["public"]["Enums"]["genders"] | null
+          id: string
+          last_name: string | null
+          team_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          gender?: Database["public"]["Enums"]["genders"] | null
+          id: string
+          last_name?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          gender?: Database["public"]["Enums"]["genders"] | null
+          id?: string
+          last_name?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_team"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
@@ -49,7 +247,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      genders: "MALE" | "FEMALE"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -137,4 +335,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

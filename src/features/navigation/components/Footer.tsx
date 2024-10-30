@@ -42,7 +42,9 @@ export const Footer: React.FC = () => {
           {/* Navigation Links */}
           <Stack direction="column" spacing={4} mb={{ base: 6, md: 0 }}>
             {LINKS.map(link => (
-              <TextLink key={link}>{link}</TextLink>
+              <TextLink to={link.to} key={link.id}>
+                {link.displayName}
+              </TextLink>
             ))}
           </Stack>
 

@@ -6,7 +6,7 @@ export const teams = [
   "Ravens",
   "Cardinals",
   "Seahawks",
-  "Bill",
+  "Bills",
   "Saints",
   "Falcons",
   "Rams",

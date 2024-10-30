@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "seed": "npx tsx seed.ts > supabase/seed.sql && npx supabase db reset",
     "prepare": "husky"
   },
   "dependencies": {

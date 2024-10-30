@@ -4,3 +4,4 @@ export { ResetPasswordForm } from "./components/ResetPasswordForm";
 export { ResendConfirmationEmail } from "./components/ResendConfirmationEmail";
 export { AuthLoadingScreen } from "./components/AuthLoadingScreen";
 export { RedirectAuthenticatedUserHome } from "./components/RedirectAuthenticatedUserHome";
+export { RedirectUnauthenticatedUserToLogin } from "./components/RedirectUnauthenticatedUserToLogin";

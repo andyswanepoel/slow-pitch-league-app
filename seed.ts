@@ -11,6 +11,7 @@ import { numberOfUsers, seedAuthUsers } from "./seed/auth_users";
 import { getRandomNumbers } from "./seed/utils";
 import { seedTeams, teams } from "./seed/teams";
 import { seedGames } from "./seed/games";
+import { seedSeasons } from "./seed/seasons";
 
 const managerIndexes = getRandomNumbers(teams.length, numberOfUsers);
 const adminIndex = getRandomNumbers(1, numberOfUsers);
@@ -29,7 +30,9 @@ const main = async () => {
 
   await seedUserRoles(seed, adminIndex, managerIndexes);
 
-  await seedGames(seed);
+  // await seedGames(seed);
+
+  await seedSeasons(seed);
 
   process.exit();
 };
