@@ -94,7 +94,9 @@ export function generateSchedule(
     );
     schedule.push(...morningGames, ...afternoonGames);
   }
-  return schedule.sort((a, b) => a.game_time.getTime() - b.game_time.getTime());
+  return schedule.sort(
+    (a, b) => new Date(a.game_time).getTime() - new Date(b.game_time).getTime()
+  );
 }
 
 export function sleep(ms: number) {

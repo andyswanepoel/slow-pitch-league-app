@@ -11,6 +11,6 @@ export interface IGameSlot {
 }
 
 export interface IGame extends IMatchUp {
-  game_time: Date;
+  game_time: Date | string;
   location: string;
 }

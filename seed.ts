@@ -30,9 +30,9 @@ const main = async () => {
 
   await seedUserRoles(seed, adminIndex, managerIndexes);
 
-  await seedGames(seed);
-
   await seedSeasons(seed);
+
+  await seedGames(seed);
 
   process.exit();
 };

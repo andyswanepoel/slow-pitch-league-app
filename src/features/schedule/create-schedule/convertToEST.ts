@@ -1,4 +1,4 @@
-export function convertToEasternTime(date: Date) {
+export function convertToEasternTime(date: Date | string) {
   const utcDate = new Date(date);
   return utcDate.toLocaleString("en-US", {
     timeZone: "America/New_York",

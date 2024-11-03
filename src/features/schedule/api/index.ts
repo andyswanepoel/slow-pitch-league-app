@@ -34,6 +34,7 @@ export const getGamesBySeason = async (seasonId: string) => {
     .order("game_time");
 
   if (error) {
+    throw new Error(error.message);
     // @TODO: handle error
   }
 
@@ -60,7 +61,7 @@ export const addGamesToSeason = async (games: IGame[], season_id: string) => {
   const gamesToInsert = games.map(game => ({
     ...game,
     season_id,
-    game_time: game.game_time.toISOString()
+    game_time: new Date(game.game_time).toISOString()
   }));
 
   const { error } = await supabase.from("games").insert(gamesToInsert);

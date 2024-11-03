@@ -11,45 +11,45 @@ export type Database = {
     Tables: {
       games: {
         Row: {
-          away_team_id: string | null
+          away_team_id: string
           away_team_runs: number | null
           created_at: string | null
           game_cancelled: boolean | null
-          game_time: string | null
-          home_team_id: string | null
+          game_time: string
+          home_team_id: string
           home_team_runs: number | null
           id: string
-          location: string | null
+          location: string
           score_validated_by_away_team: boolean | null
           score_validated_by_home_team: boolean | null
           season_id: string | null
           updated_at: string | null
         }
         Insert: {
-          away_team_id?: string | null
+          away_team_id: string
           away_team_runs?: number | null
           created_at?: string | null
           game_cancelled?: boolean | null
-          game_time?: string | null
-          home_team_id?: string | null
+          game_time: string
+          home_team_id: string
           home_team_runs?: number | null
           id?: string
-          location?: string | null
+          location: string
           score_validated_by_away_team?: boolean | null
           score_validated_by_home_team?: boolean | null
           season_id?: string | null
           updated_at?: string | null
         }
         Update: {
-          away_team_id?: string | null
+          away_team_id?: string
           away_team_runs?: number | null
           created_at?: string | null
           game_cancelled?: boolean | null
-          game_time?: string | null
-          home_team_id?: string | null
+          game_time?: string
+          home_team_id?: string
           home_team_runs?: number | null
           id?: string
-          location?: string | null
+          location?: string
           score_validated_by_away_team?: boolean | null
           score_validated_by_home_team?: boolean | null
           season_id?: string | null
@@ -103,23 +103,23 @@ export type Database = {
       seasons: {
         Row: {
           created_at: string | null
-          end_date: string | null
+          end_date: string
           id: string
-          start_date: string | null
+          start_date: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          end_date?: string | null
+          end_date: string
           id?: string
-          start_date?: string | null
+          start_date: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          end_date?: string | null
+          end_date?: string
           id?: string
-          start_date?: string | null
+          start_date?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -163,23 +163,23 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
-          role_id: string | null
+          role_id: string
           updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
-          role_id?: string | null
+          role_id: string
           updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
-          role_id?: string | null
+          role_id?: string
           updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
