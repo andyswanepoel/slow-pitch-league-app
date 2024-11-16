@@ -244,7 +244,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_team_standings: {
+        Args: {
+          season_id: string
+        }
+        Returns: {
+          team: string
+          wins: number
+          losses: number
+          draws: number
+          total_runs_for: number
+          total_runs_against: number
+        }[]
+      }
     }
     Enums: {
       genders: "MALE" | "FEMALE"
